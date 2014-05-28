@@ -9,6 +9,8 @@
 #import "FBCDAppDelegate.h"
 
 #import "FBCDMasterViewController.h"
+#import "FailedBankInfo.h"
+#import "FailedBankDetails.h"
 
 @implementation FBCDAppDelegate
 
@@ -18,7 +20,35 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    NSManagedObjectContext * context = [self managedObjectContext];
+/*
+    NSManagedObject *failedBankInfo = [NSEntityDescription insertNewObjectForEntityForName:@"FailedBankInfo" inManagedObjectContext:context];
+    [failedBankInfo setValue:@"Test Bank2" forKeyPath:@"name"];
+    [failedBankInfo setValue:@"Test ville2" forKeyPath:@"city"];
+    [failedBankInfo setValue:@"Test Land2" forKeyPath:@"state"];
+    NSManagedObject *failedBankDetails = [NSEntityDescription insertNewObjectForEntityForName:@"FailedBankDetails" inManagedObjectContext:context];
+    [failedBankDetails setValue:[NSDate date] forKeyPath:@"closeDate"];
+    [failedBankDetails setValue:[NSDate date] forKeyPath:@"updateDate"];
+    [failedBankDetails setValue:[NSNumber numberWithInt:5555] forKeyPath:@"zip"];
+    [failedBankDetails setValue:failedBankInfo forKeyPath:@"info"];
+    [failedBankInfo setValue:failedBankDetails forKeyPath:@"details"];
+    NSError *error;
+    if(![context save:&error]) {
+        NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+    }
+*/
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"FailedBankInfo" inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    NSError *error;
+    NSArray * fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+    for(FailedBankInfo *info in fetchedObjects) {
+        NSLog(@"Name: %@", info.name/*[info valueForKeyPath:@"name"]*/);
+        FailedBankDetails * details = info.details;//[info valueForKeyPath:@"details"];
+        NSLog(@"Zip: %@", details.zip /*[details valueForKeyPath:@"zip"]*/);
+    }
+    
+   // Override point for customization after application launch.
     UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
     FBCDMasterViewController *controller = (FBCDMasterViewController *)navigationController.topViewController;
     controller.managedObjectContext = self.managedObjectContext;
