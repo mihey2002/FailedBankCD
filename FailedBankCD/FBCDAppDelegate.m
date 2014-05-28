@@ -37,6 +37,8 @@
         NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
     }
 */
+    //added some comments
+    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"FailedBankInfo" inManagedObjectContext:context];
     [fetchRequest setEntity:entity];
